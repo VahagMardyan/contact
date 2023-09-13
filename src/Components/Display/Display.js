@@ -74,6 +74,10 @@ const Display = () => {
             const userAddInput = document.querySelector('#add-user');
             userAddInput.style.setProperty('--placeholder-color', 'red');
             userAddInput.placeholder = `User's name can't be empty: Input user name`;
+            setTimeout(() => {
+                userAddInput.style.setProperty('--placeholder-color','gray');
+                userAddInput.placeholder = 'Name:';
+            }, 2000);
         }
     }
 
@@ -91,6 +95,10 @@ const Display = () => {
             const userAddInput = document.querySelector(`#add-user`);
             userAddInput.style.setProperty('--placeholder-color', 'red');
             userAddInput.placeholder = `There's nothing to remove`;
+            setTimeout(() => {
+                userAddInput.style.setProperty('--placeholder-color','gray');
+                userAddInput.placeholder = 'Name:';
+            }, 2000);
         } else {
             const confirmRemoving = window.confirm(`Are You sure? This will permanently delete all users.`);
             if (confirmRemoving) {
@@ -171,7 +179,6 @@ const Display = () => {
                     ref={userImageInput} className='user-image-input' onKeyUp={keyPress}
                     onChange={handleImageUpload}
                 />
-
                 <div className={classes['btns-div']}>
                     <button onClick={addUser} className={classes['add-user-btn']} title='Add User(Enter)'>
                         <BsPersonFillAdd style={{ width: '50px', height: '25px' }} />
