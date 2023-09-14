@@ -253,13 +253,16 @@ const Display = () => {
                             ))
                         }
                     </section>
-                    : <div className={classes['parent-user-container']}>
-                        <h2 style={{ fontWeight: '300', color: 'green' }}>
+                    : <div className={classes['parent-user-container']}
+                        style={{ display: 'flex', justifyContent: 'center' }}
+                    >
+                        <h2 style={{ width: '100%', fontWeight: '300', color: 'green', display: 'flex', justifyContent: 'center' }}>
                             List is Empty: Add Contact now!
-                        <button onClick={addUser} className={classes['add-user-btn']} title='Add User(Enter)'>
-                            <BsPersonFillAdd style={{ width: '50px', height: '25px' }} />
-                        </button>
-                        </h2> 
+                            <button onClick={addUser}
+                                className={classes['add-user-btn']} title='Add User(Enter)'>
+                                <BsPersonFillAdd style={{ width: '50px', height: '25px', }} />
+                            </button>
+                        </h2>
                     </div>
             }
 
