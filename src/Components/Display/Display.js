@@ -75,7 +75,7 @@ const Display = () => {
             userAddInput.style.setProperty('--placeholder-color', 'red');
             userAddInput.placeholder = `User's name can't be empty: Input user name`;
             setTimeout(() => {
-                userAddInput.style.setProperty('--placeholder-color','gray');
+                userAddInput.style.setProperty('--placeholder-color', 'gray');
                 userAddInput.placeholder = 'Name:';
             }, 2000);
         }
@@ -96,7 +96,7 @@ const Display = () => {
             userAddInput.style.setProperty('--placeholder-color', 'red');
             userAddInput.placeholder = `There's nothing to remove`;
             setTimeout(() => {
-                userAddInput.style.setProperty('--placeholder-color','gray');
+                userAddInput.style.setProperty('--placeholder-color', 'gray');
                 userAddInput.placeholder = 'Name:';
             }, 2000);
         } else {
@@ -254,7 +254,12 @@ const Display = () => {
                         }
                     </section>
                     : <div className={classes['parent-user-container']}>
-                        <h2 style={{ fontWeight: '300', color: 'green' }}>Users will be shown here.</h2>
+                        <h2 style={{ fontWeight: '300', color: 'green' }}>
+                            List is Empty: Add Contact now!
+                        <button onClick={addUser} className={classes['add-user-btn']} title='Add User(Enter)'>
+                            <BsPersonFillAdd style={{ width: '50px', height: '25px' }} />
+                        </button>
+                        </h2> 
                     </div>
             }
 
