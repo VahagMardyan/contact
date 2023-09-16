@@ -2,7 +2,7 @@ import { useRef, useState, Fragment, useEffect } from 'react';
 import { BiTrash, BiReset, BiEditAlt } from 'react-icons/bi';
 import { BsPersonFillAdd } from 'react-icons/bs';
 import { HiOutlineUserRemove } from 'react-icons/hi';
-import { AiOutlineUser, AiOutlinePhone } from 'react-icons/ai';
+import { AiOutlineUser, AiOutlinePhone, AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { MdEmail } from 'react-icons/md';
 import { CgRemove } from 'react-icons/cg';
 import classes from '../../Ui/Global.module.css';
@@ -15,6 +15,7 @@ const Display = () => {
     const [searchUserName, setSearchUserName] = useState('');
     const [uploadedImage, setUploadedImage] = useState(null);
     const [, setImageFile] = useState(null);
+    const [selectedUser,setSelectedUser] = useState([]);
 
     const addUserName = useRef();
     const userEmail = useRef();
@@ -168,6 +169,25 @@ const Display = () => {
         }
     }
 
+     const handleSelectUser = (userId) => {
+        setSelectedUser((selected_user) => {
+          if (selected_user.includes(userId)) {
+            return selected_user.filter((id) => id !== userId);
+          } else {
+            return [...selected_user, userId];
+          }
+        });
+      };
+
+    const deleteSelectedUsers = () => {
+        const confirmRemoving = window.confirm(`delete selected users? This action is not recoverable.`);
+        if(confirmRemoving) {
+            const filteredUsers = users.filter(user=>!selectedUser.includes(user.id));
+            setUsers(filteredUsers);
+            localStorage.setItem('users',JSON.stringify(filteredUsers));
+        }
+    }
+
     return (
         <Fragment>
 
@@ -188,6 +208,9 @@ const Display = () => {
                     </button>
                     <button onClick={() => window.location.reload()} className={classes['reset-btn']} title='Reset Page'>
                         <BiReset style={{ width: '50px', height: '25px', }} />
+                    </button>
+                    <button onClick={deleteSelectedUsers} className={classes['remove-selected-users-btn']} title='Remove selected user'>
+                        <AiOutlineUsergroupDelete style={{ width: '50px', height: '25px' }} />
                     </button>
                 </div>
                 <input onChange={searchUserByName} placeholder='search user by name' className='search-user-input' />
@@ -234,6 +257,11 @@ const Display = () => {
                                     </div>
 
                                     <div className={classes['user-btns-div']}>
+                                        <input type='checkbox' 
+                                        className={classes['check']}
+                                        checked={selectedUser.includes(user.id)}
+                                        onChange={() => handleSelectUser(user.id)}
+                                        />
                                         <button onClick={() => removeUser(user.id)} className={classes['remove-user-btn']} title='Remove this user' >
                                             <HiOutlineUserRemove style={{ width: '50px', height: '25px' }} />
                                         </button>
@@ -254,11 +282,15 @@ const Display = () => {
                         }
                     </section>
                     : <div className={classes['parent-user-container']}
-                        style={{ display: 'flex', flexDirection: 'column', 
-                                 justifyContent: 'center', alignItems: 'center' }}
+                        style={{
+                            display: 'flex', flexDirection: 'column',
+                            justifyContent: 'center', alignItems: 'center'
+                        }}
                     >
-                        <h2 style={{ width: '100%', fontWeight: '300', color: 'green', 
-                                     display: 'flex', justifyContent: 'center' }}>
+                        <h2 style={{
+                            width: '100%', fontWeight: '300', color: 'green',
+                            display: 'flex', justifyContent: 'center'
+                        }}>
                             List is Empty: Add Contact now!
                         </h2>
                         <button onClick={addUser}
