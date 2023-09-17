@@ -15,7 +15,8 @@ const Display = () => {
     const [searchUserName, setSearchUserName] = useState('');
     const [uploadedImage, setUploadedImage] = useState(null);
     const [, setImageFile] = useState(null);
-    const [selectedUser,setSelectedUser] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [disableButton, setDisableButton] = useState(true);
 
     const addUserName = useRef();
     const userEmail = useRef();
@@ -169,29 +170,37 @@ const Display = () => {
         }
     }
 
-     const handleSelectUser = (userId) => {
-        setSelectedUser((selected_user) => {
-          if (selected_user.includes(userId)) {
-            return selected_user.filter((id) => id !== userId);
-          } else {
-            return [...selected_user, userId];
-          }
+    const handleSelectUser = (userId) => {
+        setSelectedUsers((selected_user) => {
+            if (selected_user.includes(userId)) {
+                return selected_user.filter((id) => id !== userId);
+            } else {
+                return [...selected_user, userId];
+            }
         });
-      };
+        setDisableButton(selectedUsers.length === 0 || users.length===0 ? false : true);
+    };
 
     const deleteSelectedUsers = () => {
         const confirmRemoving = window.confirm(`delete selected users? This action is not recoverable.`);
-        if(confirmRemoving) {
-            const filteredUsers = users.filter(user=>!selectedUser.includes(user.id));
+
+        const filteredUsers = users.filter(user => !selectedUsers.includes(user.id));
+
+        if (confirmRemoving) {
             setUsers(filteredUsers);
-            localStorage.setItem('users',JSON.stringify(filteredUsers));
+            localStorage.setItem('users', JSON.stringify(filteredUsers));
         }
+        setSelectedUsers([]);
+        setDisableButton(selectedUsers.length === 0 || users.length===0 ? false : true);
     }
 
     return (
         <Fragment>
 
             <section className={classes['display']}>
+                <p style={{ visibility: selectedUsers.length === 0 ? 'hidden' : 'visible' }}>
+                    {selectedUsers.length}/{users.length} selected
+                </p>
                 <input type='text' ref={addUserName} placeholder='name:' id='add-user' className={classes['add-user-input']} onKeyUp={keyPress} />
                 <input type='email' ref={userEmail} placeholder='Email:' className='email-user-input' onKeyUp={keyPress} />
                 <input type='number' ref={userPhone} placeholder='Phone:' className='phone-user-input' min='0' onKeyUp={keyPress} />
@@ -209,7 +218,9 @@ const Display = () => {
                     <button onClick={() => window.location.reload()} className={classes['reset-btn']} title='Reset Page'>
                         <BiReset style={{ width: '50px', height: '25px', }} />
                     </button>
-                    <button onClick={deleteSelectedUsers} className={classes['remove-selected-users-btn']} title='Remove selected user'>
+                    <button onClick={deleteSelectedUsers} className={classes['remove-selected-users-btn']}
+                        disabled={disableButton} title={disableButton ? 'Select users to enable this button' : 'Remove selected users'}
+                    >
                         <AiOutlineUsergroupDelete style={{ width: '50px', height: '25px' }} />
                     </button>
                 </div>
@@ -257,10 +268,11 @@ const Display = () => {
                                     </div>
 
                                     <div className={classes['user-btns-div']}>
-                                        <input type='checkbox' 
-                                        className={classes['check']}
-                                        checked={selectedUser.includes(user.id)}
-                                        onChange={() => handleSelectUser(user.id)}
+                                        <input type='checkbox'
+                                            className={classes['check']}
+                                            checked={selectedUsers.includes(user.id)}
+                                            onChange={() => handleSelectUser(user.id)}
+                                            title='Select user'
                                         />
                                         <button onClick={() => removeUser(user.id)} className={classes['remove-user-btn']} title='Remove this user' >
                                             <HiOutlineUserRemove style={{ width: '50px', height: '25px' }} />
