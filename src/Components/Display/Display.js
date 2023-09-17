@@ -178,8 +178,11 @@ const Display = () => {
                 return [...selected_user, userId];
             }
         });
-        setDisableButton(selectedUsers.length === 0 || users.length===0 ? false : true);
     };
+
+    useEffect(() => {
+        setDisableButton(selectedUsers.length === 0);
+    }, [selectedUsers]);
 
     const deleteSelectedUsers = () => {
         const confirmRemoving = window.confirm(`delete selected users? This action is not recoverable.`);
@@ -191,18 +194,20 @@ const Display = () => {
             localStorage.setItem('users', JSON.stringify(filteredUsers));
         }
         setSelectedUsers([]);
-        setDisableButton(selectedUsers.length === 0 || users.length===0 ? false : true);
     }
 
     return (
         <Fragment>
 
             <section className={classes['display']}>
-                <p style={{width:'7%', textAlign:'center' ,visibility: selectedUsers.length === 0 ? 'hidden' : 'visible', border:'1px solid black' }}>
-                    {selectedUsers.length}/{users.length} selected
-                </p>
+                <h1 style={{ color: 'green', fontSize: '48px', fontWeight: '400', }}>
+                    {
+                        selectedUsers.length === 0 || users.length === 0 ? 'Contact List'
+                            : `${selectedUsers.length}/${users.length} Selected`
+                    }
+                </h1>
                 <input type='text' ref={addUserName} placeholder='name:' id='add-user' className={classes['add-user-input']} onKeyUp={keyPress} />
-                <input type='email' ref={userEmail} placeholder='Email:' className='email-user-input' onKeyUp={keyPress}/>
+                <input type='email' ref={userEmail} placeholder='Email:' className='email-user-input' onKeyUp={keyPress} />
                 <input type='number' ref={userPhone} placeholder='Phone:' className='phone-user-input' min='0' onKeyUp={keyPress} />
                 <input type='file' accept='image/*' title='Upload image'
                     ref={userImageInput} className='user-image-input' onKeyUp={keyPress}
