@@ -115,10 +115,20 @@ input,
     color: red;
 }
 
+.remove-selected-users-btn {
+    border: 1px solid black;
+}
+
+.remove-selected-users-btn:is(:hover) {
+    background-color: black;
+    color: white;
+}
+
 .add-user-btn,
 .remove-all-btn,
-.reset-btn {
-    width: 18.2%;
+.reset-btn,
+.remove-selected-users-btn {
+    width: 13.7%;
 }
 
 .add-user-input,
@@ -217,4 +227,8 @@ button:not(.remove-user-btn) {
     height: 25px;
     font-size: 1.5em;
     border: 1px solid black;
+}
+
+.check {
+    cursor: pointer;
 }

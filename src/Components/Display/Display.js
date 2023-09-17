@@ -198,11 +198,11 @@ const Display = () => {
         <Fragment>
 
             <section className={classes['display']}>
-                <p style={{ visibility: selectedUsers.length === 0 ? 'hidden' : 'visible' }}>
+                <p style={{width:'7%', textAlign:'center' ,visibility: selectedUsers.length === 0 ? 'hidden' : 'visible', border:'1px solid black' }}>
                     {selectedUsers.length}/{users.length} selected
                 </p>
                 <input type='text' ref={addUserName} placeholder='name:' id='add-user' className={classes['add-user-input']} onKeyUp={keyPress} />
-                <input type='email' ref={userEmail} placeholder='Email:' className='email-user-input' onKeyUp={keyPress} />
+                <input type='email' ref={userEmail} placeholder='Email:' className='email-user-input' onKeyUp={keyPress}/>
                 <input type='number' ref={userPhone} placeholder='Phone:' className='phone-user-input' min='0' onKeyUp={keyPress} />
                 <input type='file' accept='image/*' title='Upload image'
                     ref={userImageInput} className='user-image-input' onKeyUp={keyPress}
