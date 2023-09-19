@@ -70,7 +70,7 @@ const Display = () => {
                 ...users,
                 {
                     name: capitalize(addUserName.current.value),
-                    id: new Date().getTime().toString(),
+                    id: new Date().getTime(),
                     email: userEmail.current.value,
                     phone: userPhone.current.value,
                     image: uploadedImage,
@@ -266,6 +266,8 @@ const Display = () => {
                                                 <span className='content-text'> {user.name} </span>
                                             </p> : null
                                         }
+
+                                        <p>ID: {user.id}</p>
 
                                         {user.email ?
                                             <p title='Enter "del" for delete email '>
