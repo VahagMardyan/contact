@@ -46,11 +46,15 @@ const Display = () => {
     }
 
     const capitalize = string => {
-        const str = string.split(' ');
-        const upperStr = str.map(string => {
-            return string.substring(0, 1).toUpperCase() + string.substring(1, string.length).toLowerCase();
-        });
-        return upperStr.join(' ');
+        const words = string.split(' ');
+        const capitalizedWords = words.map(word => {
+            const parts = word.split('-');
+            const capitalizedParts = parts.map(part => {
+                return part.substring(0, 1).toUpperCase() + part.substring(1, part.length).toLowerCase();
+            });
+            return capitalizedParts.join('-');
+        })
+        return capitalizedWords.join(' ');
     }
 
     const searchUserByName = event => {
