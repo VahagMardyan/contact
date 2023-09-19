@@ -11,12 +11,12 @@ import './style.css';
 const Display = () => {
 
     const [users, setUsers] = useState([]);
-    const [id, setId] = useState(0);
     const [searchUserName, setSearchUserName] = useState('');
     const [uploadedImage, setUploadedImage] = useState(null);
     const [, setImageFile] = useState(null);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [disableButton, setDisableButton] = useState(true);
+    // const [id,setId] = useState(0);
 
     const addUserName = useRef();
     const userEmail = useRef();
@@ -28,12 +28,13 @@ const Display = () => {
 
         if (storedUsers) {
             setUsers(JSON.parse(storedUsers));
-            setId(JSON.parse(storedUsers.length));
+            // setId(JSON.parse(storedUsers.length));
         }
     }, []);
 
     const handleImageUpload = event => {
         const imageFile = event.target.files[0];
+
         if (imageFile) {
             setImageFile(imageFile);
             const reader = new FileReader();
@@ -58,14 +59,24 @@ const Display = () => {
 
     const addUser = () => {
         if (addUserName.current.value) {
-            const newUser = users.concat({
-                name: capitalize(addUserName.current.value),
-                id: id,
-                email: userEmail.current.value,
-                phone: userPhone.current.value,
-                image: uploadedImage,
-            });
-            setId(id + 1);
+            // const newUser = users.concat({
+            //     name: capitalize(addUserName.current.value),
+            //     id: new Date().getTime().toString(),
+            //     email: userEmail.current.value,
+            //     phone: userPhone.current.value,
+            //     image: uploadedImage,
+            // });
+            const newUser = [
+                ...users,
+                {
+                    name: capitalize(addUserName.current.value),
+                    id: new Date().getTime().toString(),
+                    email: userEmail.current.value,
+                    phone: userPhone.current.value,
+                    image: uploadedImage,
+                }
+            ]
+            // setId(id + 1);
             setUsers(newUser);
             addUserName.current.value = '';
             userEmail.current.value = '';
