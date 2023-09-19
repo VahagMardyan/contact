@@ -267,8 +267,6 @@ const Display = () => {
                                             </p> : null
                                         }
 
-                                        <p>ID: {user.id}</p>
-
                                         {user.email ?
                                             <p title='Enter "del" for delete email '>
                                                 <MdEmail className={classes['icon']} />
