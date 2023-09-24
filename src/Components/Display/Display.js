@@ -14,8 +14,6 @@ const Display = () => {
     const [searchUserName, setSearchUserName] = useState('');
     const [uploadedImage, setUploadedImage] = useState(null);
     const [, setImageFile] = useState(null);
-    const [selectedUsers, setSelectedUsers] = useState([]);
-    const [disableButton, setDisableButton] = useState(true);
     // const [id,setId] = useState(0);
 
     const addUserName = useRef();
@@ -70,23 +68,20 @@ const Display = () => {
             //     phone: userPhone.current.value,
             //     image: uploadedImage,
             // });
-            const newUser = [
-                ...users,
-                {
+            const newUser = {
                     name: capitalize(addUserName.current.value),
                     id: new Date().getTime(),
                     email: userEmail.current.value,
                     phone: userPhone.current.value,
                     image: uploadedImage,
                 }
-            ]
             // setId(id + 1);
-            setUsers(newUser);
+            setUsers([...users,newUser]);
             addUserName.current.value = '';
             userEmail.current.value = '';
             userPhone.current.value = '';
             userImageInput.current.value = '';
-            localStorage.setItem('users', JSON.stringify(newUser));
+            localStorage.setItem('users', JSON.stringify(users));
         } else {
             const userAddInput = document.querySelector('#add-user');
             userAddInput.style.setProperty('--placeholder-color', 'red');
@@ -97,7 +92,7 @@ const Display = () => {
             }, 2000);
         }
     }
-
+    
     const removeUser = id => {
         const filteredUsers = users.filter(user => user.id !== id);
         const confirmRemoving = window.confirm(`Delete user? This action is not recoverable.`);
@@ -146,6 +141,7 @@ const Display = () => {
                         phone: newPhone === '0' ? '' : (newPhone !== '' ? newPhone : user.phone),
                         image: uploadedImage || user.image,
                         id: user.id,
+                        isChecked: false,
                     };
                 }
                 return user;
@@ -185,30 +181,19 @@ const Display = () => {
         }
     }
 
-    const handleSelectUser = (userId) => {
-        setSelectedUsers((selected_user) => {
-            if (selected_user.includes(userId)) {
-                return selected_user.filter((id) => id !== userId);
-            } else {
-                return [...selected_user, userId];
-            }
-        });
-    };
-
-    useEffect(() => {
-        setDisableButton(selectedUsers.length === 0);
-    }, [selectedUsers]);
-
     const deleteSelectedUsers = () => {
         const confirmRemoving = window.confirm(`delete selected users? This action is not recoverable.`);
 
-        const filteredUsers = users.filter(user => !selectedUsers.includes(user.id));
+        const filteredUsers = users.filter(user => !user.isChecked);
 
         if (confirmRemoving) {
             setUsers(filteredUsers);
             localStorage.setItem('users', JSON.stringify(filteredUsers));
         }
-        setSelectedUsers([]);
+    }
+
+    const filterUsers = (item) => {
+        return item.name.toLowerCase().includes(searchUserName.toLowerCase())
     }
 
     return (
@@ -216,14 +201,12 @@ const Display = () => {
 
             <section className={classes['display']}>
                 <h1 style={{ color: 'green', fontSize: '48px', fontWeight: '400', }}>
-                    {
-                        selectedUsers.length === 0 || users.length === 0 ? 'Contact List'
-                            : `${selectedUsers.length}/${users.length} Selected`
-                    }
+                    Contact List
                 </h1>
-                <input type='text' ref={addUserName} placeholder='name:' id='add-user' className={classes['add-user-input']} onKeyUp={keyPress} />
-                <input type='email' ref={userEmail} placeholder='Email:' className='email-user-input' onKeyUp={keyPress} />
-                <input type='number' ref={userPhone} placeholder='Phone:' className='phone-user-input' min='0' onKeyUp={keyPress} />
+                    <p>{users.length!==0 ? `${users.length} Contacts` : null}</p>
+                <input autoComplete='off' autoCapitalize='on' type='text' ref={addUserName} placeholder='name:' id='add-user' className={classes['add-user-input']} onKeyUp={keyPress} />
+                <input autoComplete='off' type='email' ref={userEmail} placeholder='Email:' className='email-user-input' onKeyUp={keyPress} />
+                <input autoComplete='off' type='number' ref={userPhone} placeholder='Phone:' className='phone-user-input' min='0' onKeyUp={keyPress} />
                 <input type='file' accept='image/*' title='Upload image'
                     ref={userImageInput} className='user-image-input' onKeyUp={keyPress}
                     onChange={handleImageUpload}
@@ -238,9 +221,7 @@ const Display = () => {
                     <button onClick={() => window.location.reload()} className={classes['reset-btn']} title='Reset Page'>
                         <BiReset style={{ width: '50px', height: '25px', }} />
                     </button>
-                    <button onClick={deleteSelectedUsers} className={classes['remove-selected-users-btn']}
-                        disabled={disableButton} title={disableButton ? 'Select users to enable this button' : 'Remove selected users'}
-                    >
+                    <button onClick={deleteSelectedUsers} className={classes['remove-selected-users-btn']}>
                         <AiOutlineUsergroupDelete style={{ width: '50px', height: '25px' }} />
                     </button>
                 </div>
@@ -251,7 +232,7 @@ const Display = () => {
                 users.length !== 0 ?
                     <section className={classes['parent-user-container']}>
                         {
-                            users.filter(item => item.name.toLowerCase().includes(searchUserName.toLowerCase())).map((user, i) => (
+                            users.filter(filterUsers).map((user, i) => (
                                 <div key={user.id} className={classes['user-container']}>
                                     <div className={classes['content']}>
 
@@ -290,8 +271,7 @@ const Display = () => {
                                     <div className={classes['user-btns-div']}>
                                         <input type='checkbox'
                                             className={classes['check']}
-                                            checked={selectedUsers.includes(user.id)}
-                                            onChange={() => handleSelectUser(user.id)}
+                                            onClick={()=> user.isChecked = !user.isChecked}
                                             title='Select user'
                                         />
                                         <button onClick={() => removeUser(user.id)} className={classes['remove-user-btn']} title='Remove this user' >
