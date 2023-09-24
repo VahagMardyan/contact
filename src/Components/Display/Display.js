@@ -59,29 +59,54 @@ const Display = () => {
         setSearchUserName(event.target.value);
     }
 
+    // const addUser = () => {
+    //     if (addUserName.current.value) {
+    //         const newUser = {
+    //                 name: capitalize(addUserName.current.value),
+    //                 id: new Date().getTime(),
+    //                 email: userEmail.current.value,
+    //                 phone: userPhone.current.value,
+    //                 image: uploadedImage,
+    //                 isChecked:false,
+    //             }
+    //         // setId(id + 1);
+    //         setUsers([...users,newUser]);
+    //         addUserName.current.value = '';
+    //         userEmail.current.value = '';
+    //         userPhone.current.value = '';
+    //         userImageInput.current.value = '';
+    //         const us = JSON.stringify([...users]);
+    //         console.log(us);
+    //         localStorage.setItem('users', us);
+    //     } else {
+    //         const userAddInput = document.querySelector('#add-user');
+    //         userAddInput.style.setProperty('--placeholder-color', 'red');
+    //         userAddInput.placeholder = `User's name can't be empty: Input user name`;
+    //         setTimeout(() => {
+    //             userAddInput.style.setProperty('--placeholder-color', 'gray');
+    //             userAddInput.placeholder = 'Name:';
+    //         }, 2000);
+    //     }
+    // }
+
     const addUser = () => {
         if (addUserName.current.value) {
-            // const newUser = users.concat({
-            //     name: capitalize(addUserName.current.value),
-            //     id: new Date().getTime().toString(),
-            //     email: userEmail.current.value,
-            //     phone: userPhone.current.value,
-            //     image: uploadedImage,
-            // });
             const newUser = {
-                    name: capitalize(addUserName.current.value),
-                    id: new Date().getTime(),
-                    email: userEmail.current.value,
-                    phone: userPhone.current.value,
-                    image: uploadedImage,
-                }
-            // setId(id + 1);
-            setUsers([...users,newUser]);
+                name: capitalize(addUserName.current.value),
+                id: new Date().getTime(),
+                email: userEmail.current.value,
+                phone: userPhone.current.value,
+                image: uploadedImage,
+                isChecked: false,
+            }
+
+            setUsers([...users, newUser]);
+            localStorage.setItem('users', JSON.stringify([...users, newUser]));
+
             addUserName.current.value = '';
             userEmail.current.value = '';
             userPhone.current.value = '';
             userImageInput.current.value = '';
-            localStorage.setItem('users', JSON.stringify(users));
         } else {
             const userAddInput = document.querySelector('#add-user');
             userAddInput.style.setProperty('--placeholder-color', 'red');
@@ -92,7 +117,7 @@ const Display = () => {
             }, 2000);
         }
     }
-    
+
     const removeUser = id => {
         const filteredUsers = users.filter(user => user.id !== id);
         const confirmRemoving = window.confirm(`Delete user? This action is not recoverable.`);
@@ -203,7 +228,7 @@ const Display = () => {
                 <h1 style={{ color: 'green', fontSize: '48px', fontWeight: '400', }}>
                     Contact List
                 </h1>
-                    <p>{users.length!==0 ? `${users.length} Contacts` : null}</p>
+                <p style={{ color: 'green', fontSize: '32px', }}>{users.length !== 0 ? `${users.length} ${users.length > 1 ? 'Contacts' : 'Contact'}` : null}</p>
                 <input autoComplete='off' autoCapitalize='on' type='text' ref={addUserName} placeholder='name:' id='add-user' className={classes['add-user-input']} onKeyUp={keyPress} />
                 <input autoComplete='off' type='email' ref={userEmail} placeholder='Email:' className='email-user-input' onKeyUp={keyPress} />
                 <input autoComplete='off' type='number' ref={userPhone} placeholder='Phone:' className='phone-user-input' min='0' onKeyUp={keyPress} />
@@ -271,7 +296,7 @@ const Display = () => {
                                     <div className={classes['user-btns-div']}>
                                         <input type='checkbox'
                                             className={classes['check']}
-                                            onClick={()=> user.isChecked = !user.isChecked}
+                                            onClick={() => user.isChecked = !user.isChecked}
                                             title='Select user'
                                         />
                                         <button onClick={() => removeUser(user.id)} className={classes['remove-user-btn']} title='Remove this user' >
