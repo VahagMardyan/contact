@@ -11,6 +11,7 @@ import './style.css';
 const Display = () => {
 
     const [users, setUsers] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState([]);
     const [searchUserName, setSearchUserName] = useState('');
     const [uploadedImage, setUploadedImage] = useState(null);
     const [, setImageFile] = useState(null);
@@ -58,36 +59,6 @@ const Display = () => {
     const searchUserByName = event => {
         setSearchUserName(event.target.value);
     }
-
-    // const addUser = () => {
-    //     if (addUserName.current.value) {
-    //         const newUser = {
-    //                 name: capitalize(addUserName.current.value),
-    //                 id: new Date().getTime(),
-    //                 email: userEmail.current.value,
-    //                 phone: userPhone.current.value,
-    //                 image: uploadedImage,
-    //                 isChecked:false,
-    //             }
-    //         // setId(id + 1);
-    //         setUsers([...users,newUser]);
-    //         addUserName.current.value = '';
-    //         userEmail.current.value = '';
-    //         userPhone.current.value = '';
-    //         userImageInput.current.value = '';
-    //         const us = JSON.stringify([...users]);
-    //         console.log(us);
-    //         localStorage.setItem('users', us);
-    //     } else {
-    //         const userAddInput = document.querySelector('#add-user');
-    //         userAddInput.style.setProperty('--placeholder-color', 'red');
-    //         userAddInput.placeholder = `User's name can't be empty: Input user name`;
-    //         setTimeout(() => {
-    //             userAddInput.style.setProperty('--placeholder-color', 'gray');
-    //             userAddInput.placeholder = 'Name:';
-    //         }, 2000);
-    //     }
-    // }
 
     const addUser = () => {
         if (addUserName.current.value) {
@@ -206,10 +177,23 @@ const Display = () => {
         }
     }
 
+    const handleSelectedUsers = (id) => {
+        const updatedUsers = users.map(user => {
+            if (user.id === id) {
+                return { ...user, isChecked: !user.isChecked };
+            }
+            return user;
+        });
+        const updatedUser = updatedUsers.filter(user => user.isChecked);
+        setSelectedUsers(updatedUser);
+        setUsers(updatedUsers);
+    }
+
     const deleteSelectedUsers = () => {
         const confirmRemoving = window.confirm(`delete selected users? This action is not recoverable.`);
 
         const filteredUsers = users.filter(user => !user.isChecked);
+        setSelectedUsers(filteredUsers);
 
         if (confirmRemoving) {
             setUsers(filteredUsers);
@@ -228,7 +212,12 @@ const Display = () => {
                 <h1 style={{ color: 'green', fontSize: '48px', fontWeight: '400', }}>
                     Contact List
                 </h1>
-                <p style={{ color: 'green', fontSize: '32px', }}>{users.length !== 0 ? `${users.length} ${users.length > 1 ? 'Contacts' : 'Contact'}` : null}</p>
+                <p style={{ color: 'green', fontSize: '32px', }}>
+                    {
+                        selectedUsers.length === 0 ? users.length !== 0 ? `${users.length} ${users.length > 1 ? 'Contacts' : 'Contact'}` : null
+                            : `${selectedUsers.length}/${users.length} selected`
+                    }
+                </p>
                 <input autoComplete='off' autoCapitalize='on' type='text' ref={addUserName} placeholder='name:' id='add-user' className={classes['add-user-input']} onKeyUp={keyPress} />
                 <input autoComplete='off' type='email' ref={userEmail} placeholder='Email:' className='email-user-input' onKeyUp={keyPress} />
                 <input autoComplete='off' type='number' ref={userPhone} placeholder='Phone:' className='phone-user-input' min='0' onKeyUp={keyPress} />
@@ -240,13 +229,19 @@ const Display = () => {
                     <button onClick={addUser} className={classes['add-user-btn']} title='Add User(Enter)'>
                         <BsPersonFillAdd style={{ width: '50px', height: '25px' }} />
                     </button>
-                    <button onClick={removeAll} className={classes['remove-all-btn']} title='Remove all users'>
+                    <button onClick={removeAll} className={classes['remove-all-btn']}
+                        disabled={users.length === 0 ? true : false}
+                        title={users.length === 0 ? 'Add user for enable this button.' : 'Remove all users.'}
+                    >
                         <BiTrash style={{ width: '50px', height: '25px' }} />
                     </button>
                     <button onClick={() => window.location.reload()} className={classes['reset-btn']} title='Reset Page'>
                         <BiReset style={{ width: '50px', height: '25px', }} />
                     </button>
-                    <button onClick={deleteSelectedUsers} className={classes['remove-selected-users-btn']}>
+                    <button onClick={deleteSelectedUsers} className={classes['remove-selected-users-btn']}
+                        disabled={selectedUsers.length === 0 ? true : false}
+                        title={selectedUsers.length === 0 ? 'Select user for enable this button.' : 'Remove selected users.'}
+                    >
                         <AiOutlineUsergroupDelete style={{ width: '50px', height: '25px' }} />
                     </button>
                 </div>
@@ -296,7 +291,7 @@ const Display = () => {
                                     <div className={classes['user-btns-div']}>
                                         <input type='checkbox'
                                             className={classes['check']}
-                                            onClick={() => user.isChecked = !user.isChecked}
+                                            onClick={() => handleSelectedUsers(user.id)}
                                             title='Select user'
                                         />
                                         <button onClick={() => removeUser(user.id)} className={classes['remove-user-btn']} title='Remove this user' >
