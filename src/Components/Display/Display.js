@@ -83,13 +83,14 @@ const Display = () => {
             userPhone.current.value = '';
             userImageInput.current.value = '';
         } else {
-            const userAddInput = document.querySelector('#add-user');
-            userAddInput.style.setProperty('--placeholder-color', 'red');
-            userAddInput.placeholder = `User's name can't be empty: Input user name`;
-            setTimeout(() => {
-                userAddInput.style.setProperty('--placeholder-color', 'gray');
-                userAddInput.placeholder = 'Name:';
-            }, 2000);
+            window.alert(`User's name can't be empty: Input user name`);
+            // const userAddInput = document.querySelector('#add-user');
+            // userAddInput.style.setProperty('--placeholder-color', 'red');
+            // userAddInput.placeholder = `User's name can't be empty: Input user name`;
+            // setTimeout(() => {
+            //     userAddInput.style.setProperty('--placeholder-color', 'gray');
+            //     userAddInput.placeholder = 'Name:';
+            // }, 2000);
         }
     }
 
@@ -103,20 +104,10 @@ const Display = () => {
     }
 
     const removeAll = () => {
-        if (users.length === 0) {
-            const userAddInput = document.querySelector(`#add-user`);
-            userAddInput.style.setProperty('--placeholder-color', 'red');
-            userAddInput.placeholder = `There's nothing to remove`;
-            setTimeout(() => {
-                userAddInput.style.setProperty('--placeholder-color', 'gray');
-                userAddInput.placeholder = 'Name:';
-            }, 2000);
-        } else {
-            const confirmRemoving = window.confirm(`Are You sure? This will permanently delete all users.`);
-            if (confirmRemoving) {
-                setUsers([]);
-                localStorage.setItem('users', JSON.stringify([]));
-            }
+        const confirmRemoving = window.confirm(`Are You sure? This will permanently delete all users.`);
+        if (confirmRemoving) {
+            setUsers([]);
+            localStorage.setItem('users', JSON.stringify([]));
         }
     }
 
@@ -299,8 +290,7 @@ const Display = () => {
                                         <input type='checkbox'
                                             className={classes['check']}
                                             onClick={() => handleSelectedUsers(user.id)}
-                                            title='Select user'
-                                        />
+                                            title='Select user' />
                                         <button onClick={() => removeUser(user.id)} className={classes['remove-user-btn']} title='Remove this user' >
                                             <HiOutlineUserRemove style={{ width: '50px', height: '25px' }} />
                                         </button>
