@@ -10,7 +10,7 @@ import './style.css';
 
 const Display = () => {
 
-    const [users,setUsers] = useState([]);
+    const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [searchUserName, setSearchUserName] = useState('');
     const [uploadedImage, setUploadedImage] = useState(null);
@@ -30,7 +30,7 @@ const Display = () => {
             // setId(JSON.parse(storedUsers.length));
         }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleImageUpload = event => {
@@ -73,7 +73,7 @@ const Display = () => {
                 isChecked: false,
             }
 
-            const updatedUser = [...users, newUser]
+            const updatedUser = [...users, newUser];
 
             setUsers(updatedUser);
             localStorage.setItem('users', JSON.stringify(updatedUser));
@@ -216,12 +216,15 @@ const Display = () => {
                 <h1 style={{ color: 'green', fontSize: '48px', fontWeight: '400', }}>
                     Contact List
                 </h1>
-                <p style={{ color: 'green', fontSize: '32px', }}>
-                    {
-                        selectedUsers.length === 0 ? users.length !== 0 ? `${users.length} Contact${users.length > 1 ? 's' : ''}` : null
-                            : `${selectedUsers.length}/${users.length} selected`
-                    }
-                </p>
+                {users.length !== 0 ?
+                    <p style={{ color: 'green', fontSize: '32px', }}>
+                        {
+                            selectedUsers.length === 0 ? users.length !== 0 ? `${users.length} Contact${users.length > 1 ? 's' : ''}` : null
+                                : `${selectedUsers.length}/${users.length} selected`
+                        }
+                    </p>
+                    : null
+                }
                 <input autoComplete='off' autoCapitalize='on' type='text' ref={addUserName} placeholder='name:' id='add-user' className={classes['add-user-input']} onKeyUp={keyPress} />
                 <input autoComplete='off' type='email' ref={userEmail} placeholder='Email:' className='email-user-input' onKeyUp={keyPress} />
                 <input autoComplete='off' type='number' ref={userPhone} placeholder='Phone:' className='phone-user-input' min='0' onKeyUp={keyPress} />
