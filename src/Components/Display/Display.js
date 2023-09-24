@@ -10,7 +10,7 @@ import './style.css';
 
 const Display = () => {
 
-    const [users, setUsers] = useState([]);
+    const [users,setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [searchUserName, setSearchUserName] = useState('');
     const [uploadedImage, setUploadedImage] = useState(null);
@@ -26,9 +26,11 @@ const Display = () => {
         const storedUsers = localStorage.getItem('users');
 
         if (storedUsers) {
-            setUsers(JSON.parse(storedUsers));
+            setUsers([...users, ...JSON.parse(storedUsers)]);
             // setId(JSON.parse(storedUsers.length));
         }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleImageUpload = event => {
@@ -71,8 +73,10 @@ const Display = () => {
                 isChecked: false,
             }
 
-            setUsers([...users, newUser]);
-            localStorage.setItem('users', JSON.stringify([...users, newUser]));
+            const updatedUser = [...users, newUser]
+
+            setUsers(updatedUser);
+            localStorage.setItem('users', JSON.stringify(updatedUser));
 
             addUserName.current.value = '';
             userEmail.current.value = '';
@@ -190,7 +194,7 @@ const Display = () => {
     }
 
     const deleteSelectedUsers = () => {
-        const confirmRemoving = window.confirm(`delete selected users? This action is not recoverable.`);
+        const confirmRemoving = window.confirm(`delete ${selectedUsers.length} contact${selectedUsers.length > 1 ? 's' : ''}? This action is not recoverable.`);
 
         const filteredUsers = users.filter(user => !user.isChecked);
         setSelectedUsers(filteredUsers);
@@ -214,7 +218,7 @@ const Display = () => {
                 </h1>
                 <p style={{ color: 'green', fontSize: '32px', }}>
                     {
-                        selectedUsers.length === 0 ? users.length !== 0 ? `${users.length} ${users.length > 1 ? 'Contacts' : 'Contact'}` : null
+                        selectedUsers.length === 0 ? users.length !== 0 ? `${users.length} Contact${users.length > 1 ? 's' : ''}` : null
                             : `${selectedUsers.length}/${users.length} selected`
                     }
                 </p>
@@ -233,7 +237,7 @@ const Display = () => {
                         disabled={users.length === 0 ? true : false}
                         title={users.length === 0 ? 'Add user for enable this button.' : 'Remove all users.'}
                     >
-                        <BiTrash style={{ width: '50px', height: '25px' }} />
+                        <BiTrash style={{ width: '50px', height: '25px', }} />
                     </button>
                     <button onClick={() => window.location.reload()} className={classes['reset-btn']} title='Reset Page'>
                         <BiReset style={{ width: '50px', height: '25px', }} />
