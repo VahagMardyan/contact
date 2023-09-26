@@ -10,7 +10,13 @@ import './style.css';
 
 const Display = () => {
 
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState([
+        {
+            name: 'Example', email: 'example@email.com',
+            phone: '0123456789', isChecked: false, id: 26,
+            image: '/person-logo.png',
+        }
+    ]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [searchUserName, setSearchUserName] = useState('');
     const [uploadedImage, setUploadedImage] = useState(null);
@@ -199,7 +205,6 @@ const Display = () => {
     const filterUsers = (item) => {
         return item.name.toLowerCase().includes(searchUserName.toLowerCase())
     }
-
     return (
         <Fragment>
 
@@ -332,5 +337,6 @@ const Display = () => {
         </Fragment>
     )
 }
+
 
 export default Display;
