@@ -31,9 +31,21 @@ const Display = () => {
     useEffect(() => {
         const storedUsers = localStorage.getItem('users');
 
+        const focus = (event) => {
+            if (event.altKey && event.key === 'l') {
+                addUserName.current.focus();
+            }
+        }
+
+        document.addEventListener('keydown', focus);
+
         if (storedUsers) {
             setUsers([...users, ...JSON.parse(storedUsers)]);
             // setId(JSON.parse(storedUsers.length));
+        }
+
+        return () => {
+            document.removeEventListener('keydown', focus);
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -221,9 +233,12 @@ const Display = () => {
                     </p>
                     : null
                 }
-                <input autoComplete='off' autoCapitalize='on' type='text' ref={addUserName} placeholder='name:' id='add-user' className={classes['add-user-input']} onKeyUp={keyPress} />
-                <input autoComplete='off' type='email' ref={userEmail} placeholder='Email:' className='email-user-input' onKeyUp={keyPress} />
-                <input autoComplete='off' type='number' ref={userPhone} placeholder='Phone:' className='phone-user-input' min='0' onKeyUp={keyPress} />
+                <input autoComplete='off' autoCapitalize='on' type='text' ref={addUserName} placeholder='name:' id='add-user' 
+                    className={classes['add-user-input']} onKeyUp={keyPress} title='add user name (alt+l)'/>
+                <input autoComplete='off' type='email' ref={userEmail} 
+                    placeholder='Email:' className='email-user-input' onKeyUp={keyPress} />
+                <input autoComplete='off' type='number' ref={userPhone} 
+                    placeholder='Phone:' className='phone-user-input' min='0' onKeyUp={keyPress} />
                 <input type='file' accept='image/*' title='Upload image'
                     ref={userImageInput} className='user-image-input' onKeyUp={keyPress}
                     onChange={handleImageUpload}
